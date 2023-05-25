@@ -1,4 +1,5 @@
 @import "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css";
+@import url('https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&family=Roboto+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -15,4 +16,8 @@
 
 #app {
     @apply h-screen overflow-hidden
+}
+
+.btn-primary {
+    @apply rounded p-2 border border-amber-500 text-amber-500 hover:bg-amber-950;
 }

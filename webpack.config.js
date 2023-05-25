@@ -8,6 +8,9 @@ module.exports = {
         },
         board: {
             import: './src/board.js'
+        },
+        popup: {
+            import: './src/popup.js'
         }
     },
     output: {

@@ -7,6 +7,7 @@ import { post } from "../../service/utils";
 import Button from "../../components/Button";
 import ActionButton from "../../components/ActionButton";
 import { UploadDropzone } from "./uploadDropzone";
+import { TimeTracking } from "./timeTracking";
 
 function CommentForm() {
   const [ text, setText ] = useState('');
@@ -32,18 +33,30 @@ function CommentForm() {
   </div>;
 }
 
+function TaskStatus({ name, value, icon }) {
+  return <div className="flex flex-wrap items-center py-2">
+    <div className="flex items-center gap-x-2 sm:basis-1/2">
+      { icon && <i className={ `fa-solid ${ icon } px-2` }></i> }
+      { name }
+    </div>
+    <div>
+      <span className="px-2 py-1 bg-gray-900 rounded">{ value }</span>
+    </div>
+  </div>;
+}
+
 export default () => {
   return (
     <div className="w-full h-full bg-stone-950 text-zinc-100">
-      <div className="flex lg:w-10/12 mx-auto h-full">
-        <div className="basis-2/3 flex-grow p-10 overflow-y-auto">
+      <div className="flex mx-auto h-full">
+        <div className="basis-3/4 flex-grow p-5 overflow-y-auto">
           <TaskDescription/>
 
           { (Mantis.task.attachments?.length > 0 || Mantis.task.uploadAttachmentAction) &&
             <div className="py-3 border-t-2 border-white border-opacity-10">
               <h2 className="text-lg">Anexos</h2>
 
-              <UploadDropzone />
+              <UploadDropzone/>
 
               <div className="mt-3 grid grid-cols-3 gap-2 text-sm">
                 { Mantis.task.attachments.map((attachment) => (
@@ -74,7 +87,7 @@ export default () => {
           <div className="py-3 border-t-2 border-white border-opacity-10 text-zinc-300">
             <h2 className="mb-3 text-lg text-zinc-50">Comentários</h2>
 
-            { Mantis.task.commentForm && <CommentForm /> }
+            { Mantis.task.commentForm && <CommentForm/> }
 
             { Mantis.task.bugnotes.map(bugnote => (
               <div key={ bugnote.id } className="flex flex-col my-3">
@@ -106,28 +119,25 @@ export default () => {
             )) }
           </div>
         </div>
-        <div className="bg-stone-950 basis-1/3 flex-grow border-l border-white border-opacity-10 text-sm">
-          <div className="p-10 pt-28">
-
-            <div className="flex flex-wrap items-center py-2">
-              <div className="flex items-center gap-x-2 sm:basis-1/2">
-                <i className="fa-solid fa-chart-simple px-2"></i>
-                Prioridade
-              </div>
-              <div>
-                <span className="px-2 py-1 bg-gray-900 rounded">{ Mantis.task.priority }</span>
-              </div>
+        <div className="bg-stone-950 basis-1/4 flex-grow border-l border-white border-opacity-10 text-sm">
+          <div className="p-5 flex items-center border-b border-white border-opacity-10">
+            <div className="flex-grow text-xl">
+              <span className="font-bold italic opacity-40">#</span>&nbsp;
+              { Mantis.task.summary.substring(0, 7) }
             </div>
-
-            <div className="flex flex-wrap items-center py-2">
-              <div className="flex items-center gap-x-2 sm:basis-1/2">
-                <i className="fa-solid fa-user-pen px-2"></i>
-                Relator
-              </div>
-              <div>
-                <span className="px-2 py-1 bg-gray-900 rounded">{ Mantis.task.reporter }</span>
-              </div>
+            <div>
+              { Mantis.task.actions.edit &&
+                <ActionButton value={ <i className="fa-solid fa-pencil"></i> }
+                              action={ Mantis.task.actions.edit.action }
+                              parameters={ Mantis.task.actions.edit.properties }
+                              className="btn-primary"/>
+              }
             </div>
+          </div>
+          <div className="p-5">
+
+            <TaskStatus name="Prioridade" icon="fa-flag" value={ Mantis.task.priority }/>
+            <TaskStatus name="Relator" icon="fa-user-pen" value={ Mantis.task.reporter }/>
 
             <div className="flex flex-wrap items-center py-2">
               <div className="flex items-center gap-x-2 sm:basis-1/2">
@@ -149,6 +159,9 @@ export default () => {
               </div>
             </div>
 
+          </div>
+          <div>
+            <TimeTracking taskId={Mantis.task.summary.substring(0, 7)} />
           </div>
         </div>
         <div></div>

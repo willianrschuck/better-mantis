@@ -120,6 +120,28 @@ if (tableTarefa) {
     }
   }
 
+
+  Mantis.task.actions = {};
+
+  const formEditarCartao = tableTarefa.querySelector('form[action="bug_update_page.php"]');
+  if (formEditarCartao) {
+    Mantis.task.actions.edit = extractFormAction(formEditarCartao);
+  }
+
+}
+
+function extractFormAction(form) {
+  const hiddenInputs = form.querySelectorAll('input[type="hidden"]');
+  const data = {
+    properties: {}
+  };
+
+  data.action = form.action;
+  hiddenInputs.forEach(input => {
+      data.properties[input.name] = input.value;
+  });
+
+  return data;
 }
 
 let eBugNotes = document.querySelectorAll("#bugnotes .bugnote")
@@ -218,5 +240,8 @@ if (uploadForm) {
 document.head.innerHTML = ''
 document.body.innerHTML = '<div id="app"></div>';
 
+console.log(Mantis)
+
+console.log(await chrome.storage.local.get());
 
 export { Mantis }
