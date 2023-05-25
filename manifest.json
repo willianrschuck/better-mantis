@@ -1,0 +1,23 @@
+{
+    "manifest_version": 3,
+    "name": "Better Task",
+    "version": "0.0.1",
+    "web_accessible_resources": [{
+        "resources": ["scripts/bootstrap.js"],
+        "matches": ["<all_urls>"]
+    }],
+    "content_scripts": [
+        {
+          "js": [
+            "scripts/task.js"
+          ],
+          "matches": [ "http://mantis.alfasig.com.br/view.php?*" ]
+        },
+        {
+          "js": [
+            "scripts/board.js"
+          ],
+          "matches": [ "http://mantis.alfasig.com.br/plugin.php?page=Scrum/board*", "http://mantis.alfasig.com.br/plugin.php?page=Scrum%2Fboard*" ]
+        }
+      ]
+}
