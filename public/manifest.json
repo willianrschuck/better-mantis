@@ -1,0 +1,26 @@
+{
+  "manifest_version": 3,
+  "name": "Better Mantis",
+  "version": "0.0.1",
+  "content_scripts": [
+    {
+      "js": [
+        "vendor.js", "view.js"
+      ],
+      "matches": [
+        "http://mantis.alfasig.com.br/view.php?*"
+      ]
+    },
+    {
+      "js": [
+        "vendor.js", "board.js"
+      ],
+      "matches": [
+        "http://mantis.alfasig.com.br/plugin.php?page=Scrum/board*"
+      ]
+    }
+  ],
+  "permissions": [
+    "storage"
+  ]
+}

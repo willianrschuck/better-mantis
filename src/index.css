@@ -1,0 +1,18 @@
+@import "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+::-webkit-scrollbar {
+    display: none;
+}
+
+.tiptap p.is-editor-empty:first-child::before {
+    content: attr(data-placeholder);
+    @apply float-left h-0 pointer-events-none text-sm opacity-60;
+}
+
+#app {
+    @apply h-screen overflow-hidden
+}
