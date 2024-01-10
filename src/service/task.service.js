@@ -8,6 +8,7 @@ const Mantis = {
     estimate: "",
     priority: "",
     steps: "",
+    minutes: "",
     attachments: [],
     bugnotes: []
   }
@@ -23,6 +24,7 @@ const aliases = {
   "Prioridade": "priority",
   "Passos para Reproduzir": "steps",
   "Arquivos Anexados": "attachments",
+  "Minutos em Desenv.": "minutes"
 }
 
 const regexData = /\d{4}-\d{2}-\d{2} \d{2}:\d{2}/;

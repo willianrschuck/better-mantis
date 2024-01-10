@@ -30,6 +30,6 @@
     }
   ],
   "permissions": [
-    "activeTab", "storage"
+    "storage"
   ]
 }

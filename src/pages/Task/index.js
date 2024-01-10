@@ -9,6 +9,23 @@ import ActionButton from "../../components/ActionButton";
 import { UploadDropzone } from "./uploadDropzone";
 import { TimeTracking } from "./timeTracking";
 
+const copyToClipboard = async () => {
+  let url = window.location.protocol + "//" + window.location.hostname + window.location.pathname + window.location.search;
+  let text = `${ Mantis.task.summary.replace(/"/g, '') }\n${ url }`;
+  let textArea = document.createElement('textarea');
+  textArea.value = text;
+  textArea.style.position = 'fixed';
+  textArea.style.left = '-999999px';
+  textArea.style.top = '-999999px';
+  document.body.appendChild(textArea);
+  textArea.focus();
+  textArea.select();
+  return new Promise((res, rej) => {
+    document.execCommand('copy') ? res() : rej();
+    textArea.remove();
+  });
+}
+
 function CommentForm() {
   const [ text, setText ] = useState('');
   const { commentForm } = Mantis.task;
@@ -120,17 +137,28 @@ export default () => {
           </div>
         </div>
         <div className="bg-stone-950 basis-1/4 flex-grow border-l border-white border-opacity-10 text-sm">
-          <div className="p-5 flex items-center border-b border-white border-opacity-10">
+          <div className="p-5 flex items-center border-b border-white border-opacity-10 gap-x-2">
             <div className="flex-grow text-xl">
               <span className="font-bold italic opacity-40">#</span>&nbsp;
               { Mantis.task.summary.substring(0, 7) }
+            </div>
+            <div>
+              {
+                <a href={ `${ window.location.protocol }//${ window.location.host }/plugin.php?page=Scrum/board` }
+                   className="btn-primary leading-none block">
+                  <i className="fa-solid fa-arrow-left-long"></i>
+                </a>
+              }
+            </div>
+            <div onClick={ copyToClipboard } className="btn-primary cursor-pointer" title="Copiar mensagem de commit">
+              <i className="fa-regular fa-clone"></i>
             </div>
             <div>
               { Mantis.task.actions.edit &&
                 <ActionButton value={ <i className="fa-solid fa-pencil"></i> }
                               action={ Mantis.task.actions.edit.action }
                               parameters={ Mantis.task.actions.edit.properties }
-                              className="btn-primary"/>
+                              className="btn-primary text-sm"/>
               }
             </div>
           </div>
@@ -159,9 +187,11 @@ export default () => {
               </div>
             </div>
 
+            <TaskStatus name="Minutos em Desenv." icon="fa-regular fa-keyboard" value={ Mantis.task.minutes } />
+
           </div>
           <div>
-            <TimeTracking taskId={Mantis.task.summary.substring(0, 7)} />
+          <TimeTracking taskId={Mantis.task.summary.substring(0, 7)} />
           </div>
         </div>
         <div></div>

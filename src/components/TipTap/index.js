@@ -1,23 +1,23 @@
 import { EditorContent, useEditor } from '@tiptap/react';
-import { Markdown } from 'tiptap-markdown';
+import HardBreak from '@tiptap/extension-hard-break'
 import { useDebouncedCallback } from "use-debounce";
 import { Placeholder } from "@tiptap/extension-placeholder";
 import { StarterKit } from "@tiptap/starter-kit";
 
 const extensions = [
   StarterKit,
-  Markdown.configure({
-
-  }),
   Placeholder.configure({
     placeholder: 'Adicionar comentario...',
+  }),
+  HardBreak.configure({
+    keepMarks: false,
   })
 ]
 
 const TipTap = ({ value, onChange, className }) => {
   const editor = useEditor({
     extensions,
-    content: value,
+    content: value.replace(/[\s\n]+$/, '').replace(/\n/g, '<br>'),
     onUpdate: async ({ editor }) => {
       debouncedUpdates({ onChange, editor });
     },
@@ -32,7 +32,7 @@ const TipTap = ({ value, onChange, className }) => {
   const debouncedUpdates = useDebouncedCallback(async ({ onChange, editor }) => {
     setTimeout(async () => {
       if (onChange) {
-        onChange(editor.storage.markdown.getMarkdown());
+        onChange(editor.getText());
       }
     }, 100);
   }, 200);
