@@ -4,7 +4,7 @@ const CopyPlugin = require("copy-webpack-plugin");
 module.exports = {
     entry: {
         view: {
-            import: ['./src/view.js', './src/App.css']
+            import: './src/view.js'
         },
         board: {
             import: './src/board.js'
@@ -31,7 +31,7 @@ module.exports = {
             },
             {
                 test: /\.css$/i,
-                use: ["style-loader", "css-loader"],
+                use: ['style-loader', 'css-loader', 'postcss-loader'],
             },
         ]
     },

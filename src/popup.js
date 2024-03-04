@@ -5,5 +5,5 @@ import Popup from "./pages/Popup";
 const container = document.getElementById('popup');
 const root = createRoot(container);
 root.render(<Popup />);
-import './App.css';
+import './index.css';
 

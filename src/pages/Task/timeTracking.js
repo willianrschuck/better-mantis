@@ -2,6 +2,7 @@ import { useChromeStorage } from "../../hooks/storage";
 import moment from "moment";
 import 'moment-duration-format';
 import { useEffect, useState } from "react";
+import Button from "../../components/Button";
 
 export function TimeTracking({ taskId }) {
 
@@ -51,10 +52,10 @@ export function TimeTracking({ taskId }) {
         <i className="fa-regular fa-clock"></i> { moment.duration(totalTime, 'millisecond').format("mm:ss", { trim: false }) }
       </div>
       <div className="flex gap-1">
-        <button className="btn-primary" onClick={ () => addTimeEntry() }>
+        <Button onClick={ () => addTimeEntry() }>
           { counting ? "Parar" : "Iniciar" }
-        </button>
-        <button className="btn-primary" onClick={ () => clear() }>Limpar</button>
+        </Button>
+        <Button variant="danger" onClick={ () => clear() }>Limpar</Button>
       </div>
     </div>
   );

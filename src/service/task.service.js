@@ -1,3 +1,5 @@
+import { formToObject } from "./utils";
+
 const Mantis = {
   task: {
     summary: "",
@@ -29,12 +31,9 @@ const aliases = {
 
 const regexData = /\d{4}-\d{2}-\d{2} \d{2}:\d{2}/;
 
-let tableTarefa = document.querySelector("body > table:nth-child(7)");
-if (tableTarefa) {
+let taskTable = document.querySelector("body > table:nth-child(7)");
+if (taskTable) {
 
-  /**
-   * @returns {Node[][]}
-   */
   function groupByAttachment(elements) {
     let result = [];
     let currentGroup = [];
@@ -57,7 +56,7 @@ if (tableTarefa) {
     return result;
   }
 
-  let tds = document.evaluate("//td[@class='category']", tableTarefa, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null);
+  let tds = document.evaluate("//td[@class='category']", taskTable, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null);
 
   let td;
   while (td = tds.iterateNext()) {
@@ -125,9 +124,48 @@ if (tableTarefa) {
 
   Mantis.task.actions = {};
 
-  const formEditarCartao = tableTarefa.querySelector('form[action="bug_update_page.php"]');
+  const formEditarCartao = taskTable.querySelector('form[action="bug_update_page.php"]');
   if (formEditarCartao) {
     Mantis.task.actions.edit = extractFormAction(formEditarCartao);
+  }
+
+  const formAtribuirA = taskTable.querySelector('form[action="bug_assign.php"]');
+  if (formAtribuirA) {
+    Mantis.task.actions.assign = formToObject(formAtribuirA);
+  }
+
+  const changeStatus = taskTable.querySelector('form[action="bug_change_status_page.php"]');
+  if (changeStatus) {
+    Mantis.task.actions.changeStatus = formToObject(changeStatus);
+  }
+
+  const monitor = taskTable.querySelector('form[action="bug_monitor_add.php"]');
+  if (monitor) {
+    Mantis.task.actions.monitor = formToObject(monitor);
+  }
+
+  const stopMonitor = taskTable.querySelector('form[action="bug_monitor_delete.php"]');
+  if (stopMonitor) {
+    Mantis.task.actions.stopMonitor = formToObject(stopMonitor);
+  }
+
+  const clone = taskTable.querySelector('form[action="bug_report_page.php"]');
+  if (clone) {
+    Mantis.task.actions.clone = formToObject(clone);
+  }
+  const close = taskTable.querySelector('form[action="bug_change_status_page.php"]:has(input[value="Fechar"])');
+  if (close) {
+    Mantis.task.actions.close = formToObject(close);
+  }
+
+  const move = taskTable.querySelector('form[action="bug_actiongroup_page.php"]:has(input[value="Mover"])');
+  if (move) {
+    Mantis.task.actions.move = formToObject(move);
+  }
+
+  const remove = taskTable.querySelector('form[action="bug_actiongroup_page.php"]:has(input[value="Apagar"])');
+  if (remove) {
+    Mantis.task.actions.remove = formToObject(remove);
   }
 
 }
@@ -135,12 +173,12 @@ if (tableTarefa) {
 function extractFormAction(form) {
   const hiddenInputs = form.querySelectorAll('input[type="hidden"]');
   const data = {
-    properties: {}
+    parameters: {}
   };
 
   data.action = form.action;
   hiddenInputs.forEach(input => {
-      data.properties[input.name] = input.value;
+      data.parameters[input.name] = input.value;
   });
 
   return data;
@@ -150,8 +188,6 @@ let eBugNotes = document.querySelectorAll("#bugnotes .bugnote")
 if (eBugNotes) {
 
   for (let e of eBugNotes) {
-
-    console.log(e)
 
     let userElement = e.querySelector("a[href*='view_user_page.php']");
     let contentElement = e.querySelector(".bugnote-note-public")
@@ -186,7 +222,7 @@ if (eBugNotes) {
     if (formEdicao) {
       bugnote.actionEdit = {
         action: formEdicao.getAttribute('action'),
-        properties: {
+        parameters: {
           bugnote_edit_page_token: formEdicao['bugnote_edit_page_token'].value
         }
       }
@@ -194,10 +230,9 @@ if (eBugNotes) {
 
     let formDelete = e.querySelector('form[action*="bugnote_delete.php"]');
     if (formDelete) {
-      console.log("formDelete", formDelete)
       bugnote.actionDelete = {
         action: formDelete.getAttribute('action'),
-        properties: {
+        parameters: {
           bugnote_delete_token: formDelete['bugnote_delete_token'].value,
           _confirmed: 1
         }
@@ -211,7 +246,6 @@ if (eBugNotes) {
 }
 
 let annotationForm = document.querySelector("form[action='bugnote_add.php']");
-console.log(annotationForm)
 if (annotationForm) {
   Mantis.task.commentForm = {
     action: annotationForm.action,
@@ -241,9 +275,5 @@ if (uploadForm) {
 
 document.head.innerHTML = ''
 document.body.innerHTML = '<div id="app"></div>';
-
-console.log(Mantis)
-
-console.log(await chrome.storage.local.get());
 
 export { Mantis }

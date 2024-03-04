@@ -8,6 +8,7 @@ import Button from "../../components/Button";
 import ActionButton from "../../components/ActionButton";
 import { UploadDropzone } from "./uploadDropzone";
 import { TimeTracking } from "./timeTracking";
+import SelectAction from "../../components/SelectAction";
 
 const copyToClipboard = async () => {
   let url = window.location.protocol + "//" + window.location.hostname + window.location.pathname + window.location.search;
@@ -43,10 +44,9 @@ function CommentForm() {
     post(commentForm.action, params);
   }
 
-  return <div className="flex flex-col items-start">
+  return <div className="flex flex-col items-start space-y-1">
     <TipTap value={ text } onChange={ setWraper } className="w-full"/>
-    <Button value="Comentar" className="my-2 px-3 py-1 text-sm border border-white border-opacity-10 rounded hover:bg-gray-900"
-            onClick={ () => submit() }/>
+    <Button size="sm" className="ml-auto" onClick={ () => submit() }>Comentar</Button>
   </div>;
 }
 
@@ -64,16 +64,16 @@ function TaskStatus({ name, value, icon }) {
 
 export default () => {
   return (
-    <div className="w-full h-full bg-stone-950 text-zinc-100">
-      <div className="flex mx-auto h-full">
+    <div className="w-full h-full bg-stone-950 text-zinc-100 flex">
         <div className="basis-3/4 flex-grow p-5 overflow-y-auto">
-          <TaskDescription/>
+
+          <TaskDescription />
 
           { (Mantis.task.attachments?.length > 0 || Mantis.task.uploadAttachmentAction) &&
             <div className="py-3 border-t-2 border-white border-opacity-10">
               <h2 className="text-lg">Anexos</h2>
 
-              <UploadDropzone/>
+              <UploadDropzone />
 
               <div className="mt-3 grid grid-cols-3 gap-2 text-sm">
                 { Mantis.task.attachments.map((attachment) => (
@@ -92,6 +92,7 @@ export default () => {
                     </div>
                     { attachment.actionRemove &&
                       <ActionButton
+                        size="icon"
                         value={ <i className="fa-solid fa-xmark"></i> }
                         action={ attachment.actionRemove.action }
                         parameters={ attachment.actionRemove.parameters }/> }
@@ -104,7 +105,7 @@ export default () => {
           <div className="py-3 border-t-2 border-white border-opacity-10 text-zinc-300">
             <h2 className="mb-3 text-lg text-zinc-50">Comentários</h2>
 
-            { Mantis.task.commentForm && <CommentForm/> }
+            { Mantis.task.commentForm && <CommentForm /> }
 
             { Mantis.task.bugnotes.map(bugnote => (
               <div key={ bugnote.id } className="flex flex-col my-3">
@@ -113,22 +114,8 @@ export default () => {
                     <span className="text-sm">{ bugnote.user } - { DateUtil.format(bugnote.date) }</span>
                   </div>
                   <div className="flex gap-1 py-1">
-                    {
-                      bugnote.actionEdit && <ActionButton
-                        value="Editar"
-                        action={ bugnote.actionEdit.action }
-                        parameters={ bugnote.actionEdit.properties }
-                        className="px-2 py-1 text-xs border border-white border-opacity-10 rounded hover:bg-gray-900"
-                      />
-                    }
-                    {
-                      bugnote.actionDelete && <ActionButton
-                        value="Remover"
-                        action={ bugnote.actionDelete.action }
-                        parameters={ bugnote.actionDelete.properties }
-                        className="px-2 py-1 text-xs border border-white border-opacity-10 rounded hover:bg-rose-950"
-                      />
-                    }
+                    { bugnote.actionEdit && <ActionButton size="sm" value="Editar" { ...bugnote.actionEdit } /> }
+                    { bugnote.actionDelete && <ActionButton size="sm" variant="danger" value="Remover" { ...bugnote.actionDelete } /> }
                   </div>
                 </div>
                 <TipTap value={ bugnote.content } className={ "ml-10" }/>
@@ -142,60 +129,37 @@ export default () => {
               <span className="font-bold italic opacity-40">#</span>&nbsp;
               { Mantis.task.summary.substring(0, 7) }
             </div>
-            <div>
-              {
-                <a href={ `${ window.location.protocol }//${ window.location.host }/plugin.php?page=Scrum/board` }
-                   className="btn-primary leading-none block">
-                  <i className="fa-solid fa-arrow-left-long"></i>
-                </a>
-              }
-            </div>
-            <div onClick={ copyToClipboard } className="btn-primary cursor-pointer" title="Copiar mensagem de commit">
+            <a href={ `${ window.location.protocol }//${ window.location.host }/plugin.php?page=Scrum/board` }>
+              <Button size="icon">
+                <i className="fa-solid fa-arrow-left-long"></i>
+              </Button>
+            </a>
+            <Button size="icon" onClick={ copyToClipboard } title="Copiar mensagem de commit">
               <i className="fa-regular fa-clone"></i>
-            </div>
-            <div>
-              { Mantis.task.actions.edit &&
-                <ActionButton value={ <i className="fa-solid fa-pencil"></i> }
-                              action={ Mantis.task.actions.edit.action }
-                              parameters={ Mantis.task.actions.edit.properties }
-                              className="btn-primary text-sm"/>
-              }
-            </div>
+            </Button>
+            { Mantis.task.actions.edit && <ActionButton size="icon" value={ <i className="fa-solid fa-pencil"></i> } { ...Mantis.task.actions.edit } /> }
           </div>
           <div className="p-5">
-
-            <TaskStatus name="Prioridade" icon="fa-flag" value={ Mantis.task.priority }/>
-            <TaskStatus name="Relator" icon="fa-user-pen" value={ Mantis.task.reporter }/>
-
-            <div className="flex flex-wrap items-center py-2">
-              <div className="flex items-center gap-x-2 sm:basis-1/2">
-                <i className="fa-solid fa-user px-2"></i>
-                Atribuído a
-              </div>
-              <div>
-                <span className="px-2 py-1 bg-gray-900 rounded">{ Mantis.task.responsible }</span>
-              </div>
-            </div>
-
-            <div className="flex flex-wrap items-center py-2">
-              <div className="flex items-center gap-x-2 sm:basis-1/2">
-                <i className="fa-solid fa-person-digging px-2"></i>
-                Estimativa
-              </div>
-              <div>
-                <span className="px-2 py-1 bg-gray-900 rounded">{ Mantis.task.estimate || 'não pontuado' }</span>
-              </div>
-            </div>
-
+            <TaskStatus name="Prioridade" icon="fa-flag" value={ Mantis.task.priority } />
+            <TaskStatus name="Relator" icon="fa-user-pen" value={ Mantis.task.reporter } />
+            <TaskStatus name="Atribuído a" icon="fa-user" value={ Mantis.task.responsible } />
+            <TaskStatus name="Estimatica" icon="fa-person-digging" value={ Mantis.task.estimate || 'não pontuado' } />
             <TaskStatus name="Minutos em Desenv." icon="fa-regular fa-keyboard" value={ Mantis.task.minutes } />
-
           </div>
           <div>
-          <TimeTracking taskId={Mantis.task.summary.substring(0, 7)} />
+            <TimeTracking taskId={ Mantis.task.summary.substring(0, 7) }/>
+          </div>
+          <div className="flex flex-wrap justify-center gap-1 p-1">
+            {Mantis.task.actions.assign && <SelectAction value="Atribuir a" { ...Mantis.task.actions.assign } />}
+            {Mantis.task.actions.changeStatus && <SelectAction value="Mudar Status" { ...Mantis.task.actions.changeStatus } />}
+            {Mantis.task.actions.monitor && <SelectAction value="Monitorar" { ...Mantis.task.actions.monitor } />}
+            {Mantis.task.actions.stopMonitor && <SelectAction value="Parar de Monitorar" { ...Mantis.task.actions.stopMonitor } />}
+            {Mantis.task.actions.clone && <SelectAction value="Clonar" { ...Mantis.task.actions.clone } />}
+            {Mantis.task.actions.close && <SelectAction value="Fechar" { ...Mantis.task.actions.close } />}
+            {Mantis.task.actions.move && <SelectAction value="Mover" { ...Mantis.task.actions.move } />}
+            {Mantis.task.actions.remove && <SelectAction value="Remover" variant="danger" { ...Mantis.task.actions.remove } />}
           </div>
         </div>
-        <div></div>
-      </div>
     </div>
   );
 }

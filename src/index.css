@@ -5,19 +5,63 @@
 @tailwind components;
 @tailwind utilities;
 
-::-webkit-scrollbar {
-    display: none;
+@layer base {
+    :root {
+        --primary: 38 92% 50%;
+        --primary-fg: 20 13% 9%;
+        --secondary: 0 0% 84%;
+        --secondary-fg: 0 0% 6%;
+    }
+
+    .dark {
+        --primary: 263.4 70% 50.4%;
+        --primary-fg: 210 20% 98%;
+    }
+
+    ::-webkit-scrollbar {
+        display: none;
+    }
+
+    #app {
+        @apply h-screen overflow-hidden
+    }
 }
+
+
 
 .tiptap p.is-editor-empty:first-child::before {
     content: attr(data-placeholder);
     @apply float-left h-0 pointer-events-none text-sm opacity-60;
 }
 
-#app {
-    @apply h-screen overflow-hidden
+.tiptap h1 {
+    @apply text-2xl underline underline-offset-4 leading-10
 }
 
-.btn-primary {
-    @apply rounded p-2 border border-amber-500 text-amber-500 hover:bg-amber-950;
+.tiptap h2 {
+    @apply text-xl font-bold leading-10
+}
+
+.tiptap h3 {
+    @apply font-bold leading-10
+}
+
+.tiptap ul {
+    @apply list-disc list-inside
+}
+
+.tiptap ol {
+    @apply list-decimal list-inside marker:text-zinc-400 marker:font-bold
+}
+
+.tiptap code {
+    @apply bg-stone-700 rounded-md
+}
+
+.tiptap ol::marker {
+    @apply font-thin
+}
+
+ul li p, ol li p {
+    display: inline;
 }
