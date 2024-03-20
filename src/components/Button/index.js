@@ -9,13 +9,16 @@ const buttonVariants = cva("inline-flex items-center justify-center whitespace-n
       variant: {
         default:
           "border border-secondary text-white text-opacity-70 border-opacity-30 hover:border-opacity-70 hover:text-opacity-100",
+        ghost:
+          "hover:bg-secondary/30",
         danger:
           "border border-red-500 text-red-500 text-opacity-70 border-opacity-30 hover:border-opacity-70 hover:text-opacity-100",
       },
       size: {
         sm: "text-sm py-1 px-2",
         default: "text-base py-2 px-3",
-        icon: "text-base py-2 px-2",
+        icon: "h-9 w-9",
+        "icon-sm": "h-5 w-5",
       }
     },
     defaultVariants: {

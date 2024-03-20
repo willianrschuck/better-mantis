@@ -49,7 +49,6 @@ export function UploadDropzone() {
 
   function upload(files) {
     const { action, hiddenAttributes } = Mantis.task.uploadAttachmentAction;
-    console.log("Mantis.task.uploadAttachmentAction", Mantis.task.uploadAttachmentAction)
     hiddenAttributes["ufile[]"] = files;
     post(action, hiddenAttributes);
   }

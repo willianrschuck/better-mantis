@@ -32,7 +32,7 @@ function post(path, params, method='post') {
 function formToObject(formElement) {
   const elements = Array.from(formElement.elements);
   return {
-    action: formElement.action,
+    action: formElement.getAttribute("action"),
     method: formElement.method,
     elements: elements.map(element => {
       const { tagName, type, name, value } = element;

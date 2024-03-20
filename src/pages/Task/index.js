@@ -8,7 +8,9 @@ import Button from "../../components/Button";
 import ActionButton from "../../components/ActionButton";
 import { UploadDropzone } from "./uploadDropzone";
 import { TimeTracking } from "./timeTracking";
-import SelectAction from "../../components/SelectAction";
+import FormAction from "../../components/SelectAction";
+import { Dialog, DialogContent, DialogTrigger } from "../../components/Dialog";
+import { EyeOpenIcon } from "@radix-ui/react-icons";
 
 const copyToClipboard = async () => {
   let url = window.location.protocol + "//" + window.location.hostname + window.location.pathname + window.location.search;
@@ -32,7 +34,6 @@ function CommentForm() {
   const { commentForm } = Mantis.task;
 
   const setWraper = (text) => {
-    console.log(text);
     setText(text);
   }
 
@@ -77,9 +78,9 @@ export default () => {
 
               <div className="mt-3 grid grid-cols-3 gap-2 text-sm">
                 { Mantis.task.attachments.map((attachment) => (
-                  <div
-                    className="flex items-center justify-between border-2 border-white border-opacity-10 rounded-xl px-3 py-2">
-                    <div className="flex items-center min-w-0">
+                  <div key={ attachment.url }
+                    className="flex items-center justify-between gap-2 border-2 border-white border-opacity-10 rounded-xl px-3 py-2">
+                    <div className="flex items-center flex-grow min-w-0">
                       <div className="pr-2">
                         <i className="fa-solid fa-paperclip"></i>
                       </div>
@@ -89,6 +90,17 @@ export default () => {
                           <span className="text-zinc-400">{ DateUtil.format(attachment.date) }</span>
                         </div>
                       </a>
+                      { attachment.name.endsWith(".png") &&
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <Button variant="ghost" size="icon" className="rounded-full ml-auto"><EyeOpenIcon className="h-4 w-4"/></Button>
+                          </DialogTrigger>
+                          <DialogContent className="p-0 overflow-hidden max-w-max max-h-screen">
+                            <img src={ attachment.url } alt={ attachment.name } className="w-full h-full" />
+                          </DialogContent>
+                        </Dialog>
+                      }
+
                     </div>
                     { attachment.actionRemove &&
                       <ActionButton
@@ -150,14 +162,14 @@ export default () => {
             <TimeTracking taskId={ Mantis.task.summary.substring(0, 7) }/>
           </div>
           <div className="flex flex-wrap justify-center gap-1 p-1">
-            {Mantis.task.actions.assign && <SelectAction value="Atribuir a" { ...Mantis.task.actions.assign } />}
-            {Mantis.task.actions.changeStatus && <SelectAction value="Mudar Status" { ...Mantis.task.actions.changeStatus } />}
-            {Mantis.task.actions.monitor && <SelectAction value="Monitorar" { ...Mantis.task.actions.monitor } />}
-            {Mantis.task.actions.stopMonitor && <SelectAction value="Parar de Monitorar" { ...Mantis.task.actions.stopMonitor } />}
-            {Mantis.task.actions.clone && <SelectAction value="Clonar" { ...Mantis.task.actions.clone } />}
-            {Mantis.task.actions.close && <SelectAction value="Fechar" { ...Mantis.task.actions.close } />}
-            {Mantis.task.actions.move && <SelectAction value="Mover" { ...Mantis.task.actions.move } />}
-            {Mantis.task.actions.remove && <SelectAction value="Remover" variant="danger" { ...Mantis.task.actions.remove } />}
+            {Mantis.task.actions.assign && <FormAction id="assign" value="Atribuir a" { ...Mantis.task.actions.assign } />}
+            {Mantis.task.actions.changeStatus && <FormAction id="changeStatus" value="Mudar Status" { ...Mantis.task.actions.changeStatus } />}
+            {Mantis.task.actions.monitor && <FormAction id="monitor" value="Monitorar" { ...Mantis.task.actions.monitor } />}
+            {Mantis.task.actions.stopMonitor && <FormAction id="stopMonitor" value="Parar de Monitorar" { ...Mantis.task.actions.stopMonitor } />}
+            {Mantis.task.actions.clone && <FormAction id="clone" value="Clonar" { ...Mantis.task.actions.clone } />}
+            {Mantis.task.actions.close && <FormAction id="close" value="Fechar" { ...Mantis.task.actions.close } />}
+            {Mantis.task.actions.move && <FormAction id="move" value="Mover" { ...Mantis.task.actions.move } />}
+            {Mantis.task.actions.remove && <FormAction id="remove" value="Remover" variant="danger" { ...Mantis.task.actions.remove } />}
           </div>
         </div>
     </div>
